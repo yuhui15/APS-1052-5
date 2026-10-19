@@ -355,7 +355,7 @@ plt.close("all")
 #If the p-value of the test is greater than the required significance (>0.05), residuals are independent
 import statsmodels.api as sm
 lb = sm.stats.acorr_ljungbox(residuals, lags=[10], boxpierce=False)
-print("Ljung-Box test p-value", lb[1])
+print("Ljung-Box test p-value", lb['lb_pvalue'].values)
 
 #Detrending Prices and Returns and white reality check
 detrended_open = detrendPrice.detrendPrice(openp[10000:12000])
@@ -363,6 +363,3 @@ detrended_retFut1 = detrended_open.pct_change(periods=1).shift(-1).fillna(0)
 detrended_syst_rets = detrended_retFut1 * pd.Series(positions2).fillna(0)
 WhiteRealityCheckFor1.bootstrap(detrended_syst_rets)
 plt.show()
-
-
-
