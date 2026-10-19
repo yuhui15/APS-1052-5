@@ -6,11 +6,9 @@ Out-of-sample: CAGR=0.411507 Sharpe ratio=3.81014 maxDD=-0.0344989 maxDDD=180 Ca
 FeatureExtraction=False
 
 Best parameters : {'preprocessor__num__pca__n_components': 9, (out of 11)
-#####
+Out-of-sample: CAGR=0.375565 Sharpe ratio=3.52664 maxDD=-0.0357181 maxDDD=246 Calmar ratio=10.5147  phi_k_corr=0.150482 phi_k_p_val=8.01668e-06  accuracy_score=0.551
 
 Logistic regresion does NOT require predictors to be uncorrelated, so FeatureExtraction=True is NOT required.
 Logistic regression is benefitting from the denoising involved in both FeatureExtraction=True and FeatureExtraction=False.
 We can see this because n_components is not 11 in either case.
 By default, Scikit-Learn is set to do FeatureExtraction with PCA.
-
-
