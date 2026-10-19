@@ -179,7 +179,8 @@ myscorer = make_scorer(phi_k, greater_is_better=True)
 
 numeric_sub_pipeline = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='constant', fill_value=0)),
-    ('scaler', StandardScaler())])
+    ('scaler', StandardScaler()),
+    ('pca', PCA())]) #PCA goes after scaling, and only on the numeric (continuous) features
 categorical_sub_pipeline = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='constant', fill_value=0)),
     ('onehot', OneHotEncoder(handle_unknown='ignore'))])
@@ -206,7 +207,7 @@ Specify in ncomponents_rs the number of components
 for PCA to try (from 2 to the maximum possible)
 """
 
-ncomponents_rs =   #####
+ncomponents_rs =   list(range(2,len(numeric_features_ix.values)+1)) #2 to 11 (the number of numeric features)
 c_rs = np.logspace(3, -4, num=20, endpoint = True)
 #penalty type=L2 like ridge regression (small coefficients preferred), L1 like lasso  (coefficients can become zero)
 p_rs= ["l1", "l2"]
@@ -221,7 +222,7 @@ Following the instructions of the error message:
 Print out the list of possible keys by printing out: grid_search.get_params().keys()
 Find the correct key and substitute it instead of 'preprocessor__n_components'
 """
-param_grid =  [{#####, 'logistic__C': c_rs, 'logistic__penalty': p_rs}]
+param_grid =  [{'preprocessor__num__pca__n_components': ncomponents_rs, 'logistic__C': c_rs, 'logistic__penalty': p_rs}]
 
 grid_search = RandomizedSearchCV(pipe, param_grid, cv=5, scoring=myscorer, return_train_score=True)
 #grid_search = GridSearchCV(pipe, param_grid, cv=5, scoring=myscorer, return_train_score=True)
