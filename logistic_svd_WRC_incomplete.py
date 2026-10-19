@@ -205,8 +205,9 @@ mixing dense and sparse predictors might reduce this advantage.
 """
 
 pipe = Pipeline(steps=[('preprocessor', preprocessor),('svd', TruncatedSVD()),('logistic', logistic)])
-pipe = Pipeline(steps=[('svd', TruncatedSVD()),('preprocessor', preprocessor),('logistic', logistic)])
-pipe = Pipeline(steps=[('preprocessor', preprocessor),('logistic', logistic),('svd', TruncatedSVD()))
+#pipe = Pipeline(steps=[('svd', TruncatedSVD()),('preprocessor', preprocessor),('logistic', logistic)]) #wrong: svd before imputing/scaling/one-hot
+#pipe = Pipeline(steps=[('preprocessor', preprocessor),('logistic', logistic),('svd', TruncatedSVD())) #wrong: svd after the classifier (also a syntax error)
+#correct: the first pipe above (preprocessor -> svd -> logistic), svd goes after scaling and one-hot encoding
 
 
 ncomponents_rs =   list(range(2,x_train.shape[1]))
@@ -220,7 +221,7 @@ Adjust param_grid to reflect the inclusion of TruncatedSVD into the pipeline pip
 Print out the list of possible keys by printing out: grid_search.get_params().keys()
 """
 
-param_grid =  [{#####, logistic__C': c_rs, 'logistic__penalty': p_rs}]
+param_grid =  [{'svd__n_components': ncomponents_rs, 'logistic__C': c_rs, 'logistic__penalty': p_rs}]
 
 grid_search = RandomizedSearchCV(pipe, param_grid, cv=5, scoring=myscorer, return_train_score=True)
 #grid_search = GridSearchCV(pipe, param_grid, cv=5, scoring=myscorer, return_train_score=True)
@@ -363,4 +364,3 @@ for item in importance_plot.get_xticklabels(): #rotate the x labels by 90 degree
     item.set_rotation(90)
 #plt.show()
 plt.savefig(r'Results\%s.png' %("Coefficients"))
-
